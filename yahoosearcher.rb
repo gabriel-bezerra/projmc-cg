@@ -65,6 +65,7 @@ class YahooSearcher
 
 end
 
+"""
 # print results
 #YahooSearcher.new.search_for('query').each do |link|
 YahooSearcher.new.test_search.each do |link|
@@ -72,4 +73,5 @@ YahooSearcher.new.test_search.each do |link|
     puts link.href
     puts
 end
+"""
 

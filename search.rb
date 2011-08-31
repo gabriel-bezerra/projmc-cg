@@ -4,6 +4,7 @@ require 'rubygems'
 require 'mechanize'
 
 require './googlesearcher'
+require './yahoosearcher'
 
 # A basic searcher
 class Searcher
@@ -21,13 +22,6 @@ class Searcher
     end
 end
 
-# A Yahoo! searcher
-class Yahoo < Searcher
-    def initialize
-        super('http://www.yahoo.com', 'sf1', 'p')
-    end
-end
-
 # A Bing searcher
 class Bing < Searcher
     def initialize
@@ -37,19 +31,24 @@ class Bing < Searcher
 end
 
 #Testing-----------------------------------------------------------------------
+
+def show_these_links(links)
+    links.each do |link|
+        puts link.text
+        puts link.href
+        puts
+    end
+end
+
 query = 'inheritance in ruby'
 
 puts 'GOOGLE------------------------------------------------------------------'
 r1 = GoogleSearcher.new.search_for(query)
-r1.each do |link|
-    puts link.text
-end
+show_these_links(r1)
 
 puts 'YAHOO!------------------------------------------------------------------'
-r2 = Yahoo.new.search(query)
-r2.links.each do |link|
-    puts link.text
-end
+r2 = YahooSearcher.new.search_for(query)
+show_these_links(r2)
 
 puts 'BING--------------------------------------------------------------------'
 r3 = Bing.new.search(query)
