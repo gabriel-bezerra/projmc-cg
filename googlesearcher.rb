@@ -4,7 +4,7 @@ require 'mechanize'
 
 class GoogleSearcher
 
-    def search(query)
+    def search_for(query)
         extract_results_from results_page_for query
     end
 
@@ -78,11 +78,13 @@ class GoogleSearcher
 
 end
 
+"""
 # print results
-#GoogleSearcher.new.search('query').each do |link|
+#GoogleSearcher.new.search_for('query').each do |link|
 GoogleSearcher.new.test_search.each do |link|
     puts link.text
     puts link.href
     puts
 end
+"""
 
