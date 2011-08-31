@@ -52,10 +52,11 @@ class GoogleSearcher
         result_links
     end
 
-    # links must start with http://
+    # links must start with http:// if it has http://
     def clean_links(html_links)
         html_links.each do |node|
-            unless /^http:\/\// =~ node.attribute('href')
+            unless /^http:\/\// =~ node.attribute('href') \
+                    and /http:\/\// =~ node.attribute('href')
                 actual_url = node.attribute('href').content.sub(/^.*http:\/\//,
                                                                 'http://')
                 node.attribute('href').content = actual_url
