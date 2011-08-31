@@ -1,8 +1,6 @@
-require './searcher'
+require './engine'
 
-class GoogleSearcher < Searcher
-
-    private
+class GoogleEngine < Engine
 
     def test_page
         'test-search-google.htm'
@@ -12,20 +10,21 @@ class GoogleSearcher < Searcher
         "http://www.google.com/search?q=#{query}"
     end
 
-    def results_section_from(results_page)
-        results_page.css('div #ires ol')
-    end
+    def html_links_from(results_page)
+        results_section = results_page.css('div #ires ol')
 
-    def html_links_from(results_section)
         results_section.css('h3.r a.l')
     end
 
 end
 
+
 """
+require './searcher'
+
 # print results
-#GoogleSearcher.new.search_for('query').each do |link|
-GoogleSearcher.new.test_search.each do |link|
+#Searcher.new(GoogleEngine.new).search_for('query').each do |link|
+Searcher.new(GoogleEngine.new).test_search.each do |link|
     puts link.text
     puts link.href
     puts
