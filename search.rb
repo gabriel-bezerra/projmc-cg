@@ -5,6 +5,7 @@ require 'mechanize'
 
 require './googlesearcher'
 require './yahoosearcher'
+require './bingsearcher'
 
 # A basic searcher
 class Searcher
@@ -22,14 +23,6 @@ class Searcher
     end
 end
 
-# A Bing searcher
-class Bing < Searcher
-    def initialize
-        super('http://www.bing.com', 'nil', 'q')
-        @form = @agent.get(@home).forms.first
-    end
-end
-
 #Testing-----------------------------------------------------------------------
 
 def show_these_links(links)
@@ -43,15 +36,14 @@ end
 query = 'inheritance in ruby'
 
 puts 'GOOGLE------------------------------------------------------------------'
-r1 = GoogleSearcher.new.search_for(query)
-show_these_links(r1)
+r1 = GoogleSearcher.new.search_for query
+show_these_links r1
 
 puts 'YAHOO!------------------------------------------------------------------'
-r2 = YahooSearcher.new.search_for(query)
-show_these_links(r2)
+r2 = YahooSearcher.new.search_for query
+show_these_links r2
 
 puts 'BING--------------------------------------------------------------------'
-r3 = Bing.new.search(query)
-r3.links.each do |link|
-    puts link.text
-end
+r3 = BingSearcher.new.search_for query
+show_these_links r3
+
