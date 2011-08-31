@@ -1,10 +1,10 @@
 #!usr/bin/env ruby
 
 require './searcher'
-require './googlesearcher'
-require './yahoosearcher'
-require './bingsearcher'
-require './bingproxiedsearcher'
+require './engines/googleengine'
+require './engines/yahooengine'
+require './engines/bingengine'
+require './engines/proxiedengine'
 
 #Testing-----------------------------------------------------------------------
 

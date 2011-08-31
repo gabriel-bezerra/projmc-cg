@@ -1,4 +1,4 @@
-require './engine'
+require './engines/engine'
 
 class ProxiedEngine < Engine
 
