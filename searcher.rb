@@ -1,4 +1,3 @@
-
 require 'nokogiri'
 require 'mechanize'
 
@@ -48,3 +47,4 @@ class Searcher
     end
 
 end
+
