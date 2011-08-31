@@ -1,4 +1,4 @@
-require './searcher.rb'
+require './searcher'
 
 class BingSearcher < Searcher
 
