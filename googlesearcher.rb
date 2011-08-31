@@ -39,7 +39,7 @@ class GoogleSearcher
 
 
     def results_section_from(results_page)
-        results_page.css('div#ires ol')
+        results_page.css('div #ires ol')
     end
 
     def html_links_from(results_section)
