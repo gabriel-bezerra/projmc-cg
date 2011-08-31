@@ -2,11 +2,11 @@ require './searcher'
 
 class BingSearcher < Searcher
 
-    def initialize
-        @test_page = 'test-search-bing.htm'
-    end
-
     private
+
+    def test_page
+        'test-search-bing.htm'
+    end
 
     def query_link(query)
         "http://bing.com/search?q=#{query}"

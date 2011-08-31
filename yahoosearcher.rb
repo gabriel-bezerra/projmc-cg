@@ -2,11 +2,11 @@ require './searcher'
 
 class YahooSearcher < Searcher
 
-    def initialize
-        @test_page = 'test-search-yahoo.htm'
-    end
-
     private
+
+    def test_page
+        'test-search-yahoo.htm'
+    end
 
     def query_link(query)
         "http://search.yahoo.com/search?p=#{query}"

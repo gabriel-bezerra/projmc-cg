@@ -2,11 +2,11 @@ require './searcher'
 
 class GoogleSearcher < Searcher
 
-    def initialize
-        @test_page = 'test-search-google.htm'
-    end
-
     private
+
+    def test_page
+        'test-search-google.htm'
+    end
 
     def query_link(query)
         "http://www.google.com/search?q=#{query}"

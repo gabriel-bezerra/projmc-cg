@@ -24,7 +24,7 @@ class Searcher
 
     def test_results_page
         doc = nil
-        File.open(@test_page) do |file|
+        File.open(test_page) do |file|
             doc = Nokogiri.HTML(file)
         end
         doc
