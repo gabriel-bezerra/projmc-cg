@@ -22,8 +22,6 @@ class Searcher
         to_links(html_links)
     end
 
-    # creates Mechanize::Page::Links from the html links because it is easier to
-    # use
     def to_links(html_links)
         links = []
 

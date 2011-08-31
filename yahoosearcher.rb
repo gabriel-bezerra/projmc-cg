@@ -6,7 +6,7 @@ class YahooEngine < Engine
         'test-search-yahoo.htm'
     end
 
-    def query_link(query)
+    def query_link_for(query)
         "http://search.yahoo.com/search?p=#{query}"
     end
 

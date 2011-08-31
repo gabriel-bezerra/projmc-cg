@@ -10,7 +10,7 @@ class ProxiedEngine < Engine
         agent = Mechanize.new
         web_proxy = agent.get('http://pzdl.info/')
         proxy_form = web_proxy.form_with(:action => 'includes/process.php?action=update')
-        proxy_form.field_with(:name => 'u').value = @engine.query_link query
+        proxy_form.field_with(:name => 'u').value = @engine.query_link_for query
         proxy_form.checkbox_with(:name => 'encodeURL').checked = false
         agent.submit(proxy_form).parser
     end

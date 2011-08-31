@@ -13,7 +13,7 @@ class Engine
 
     def results_page_for(query)
         agent = Mechanize.new
-        agent.get(query_link(query)).parser
+        agent.get(query_link_for query).parser
     end
 
 end

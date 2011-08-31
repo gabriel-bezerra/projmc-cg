@@ -6,7 +6,7 @@ class GoogleEngine < Engine
         'test-search-google.htm'
     end
 
-    def query_link(query)
+    def query_link_for(query)
         "http://www.google.com/search?q=#{query}"
     end
 

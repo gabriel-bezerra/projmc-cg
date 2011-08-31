@@ -6,7 +6,7 @@ class BingEngine < Engine
         'test-search-bing.htm'
     end
 
-    def query_link(query)
+    def query_link_for(query)
         "http://bing.com/search?q=#{query}"
     end
 

@@ -1,8 +1,6 @@
 #!usr/bin/env ruby
 
-require 'rubygems'
-require 'mechanize'
-
+require './searcher'
 require './googlesearcher'
 require './yahoosearcher'
 require './bingsearcher'
@@ -21,17 +19,18 @@ end
 query = 'inheritance in ruby'
 
 puts 'GOOGLE------------------------------------------------------------------'
-r1 = GoogleSearcher.new.search_for query
+r1 = Searcher.new(GoogleEngine.new).search_for query
 show_these_links r1
 
 puts 'YAHOO!------------------------------------------------------------------'
-r2 = YahooSearcher.new.search_for query
+r2 = Searcher.new(YahooEngine.new).search_for query
 show_these_links r2
 
 puts 'BING--------------------------------------------------------------------'
-r3 = BingSearcher.new.search_for query
+r3 = Searcher.new(BingEngine.new).search_for query
 show_these_links r3
 
 puts 'PROXIED BING------------------------------------------------------------'
-r4 = BingProxiedSearcher.new.search_for query
+r4 = Searcher.new(ProxiedEngine.new(BingEngine.new)).search_for query
 show_these_links r4
+
