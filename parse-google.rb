@@ -5,28 +5,44 @@ require 'mechanize'
 class GoogleSearcher
 
     def search(query)
-        page = get_results_page(query)
-        results_section = get_results_section(page)
+        extract_results_from results_page_for query
+    end
 
-        html_links = get_html_links(results_section)
+    def test_search
+        extract_results_from test_results_page
+    end
+
+    private
+
+    def extract_results_from(page)
+        results_section = results_section_from(page)
+
+        html_links = html_links_from(results_section)
         clean_links(html_links)
 
         to_links(html_links)
     end
 
-    private
 
-    def get_results_page(query)
+    def test_results_page
+        doc = nil
+        File.open('test-search-google.htm') do |file|
+            doc = Nokogiri.HTML(file)
+        end
+        doc
+    end
+
+    def results_page_for(query)
         agent = Mechanize.new
         agent.get("http://www.google.com/search?q=#{query}").parser
     end
 
-    def get_results_section(results_page)
+
+    def results_section_from(results_page)
         results_page.css('div#ires ol')
     end
 
-    # get links from results section
-    def get_html_links(results_section)
+    def html_links_from(results_section)
         result_links = []
 
         results_section.css('a.l').each do |link|
@@ -36,19 +52,19 @@ class GoogleSearcher
         result_links
     end
 
-
     # links must start with http://
     def clean_links(html_links)
         html_links.each do |node|
             unless /^http:\/\// =~ node.attribute('href')
-                actual_url = node.attribute('href').content.sub(/^.*http:\/\//, 'http://')
+                actual_url = node.attribute('href').content.sub(/^.*http:\/\//,
+                                                                'http://')
                 node.attribute('href').content = actual_url
             end
         end
     end
 
-
-    # creates Mechanize::Page::Links because it is easier to parse
+    # creates Mechanize::Page::Links from the html links because it is easier to
+    # use
     def to_links(html_links)
         links = []
 
@@ -62,7 +78,8 @@ class GoogleSearcher
 end
 
 # print results
-GoogleSearcher.new.search('query').each do |link|
+#GoogleSearcher.new.search('query').each do |link|
+GoogleSearcher.new.test_search.each do |link|
     puts link.text
     puts link.href
     puts
