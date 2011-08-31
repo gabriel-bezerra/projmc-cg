@@ -6,6 +6,7 @@ require 'mechanize'
 require './googlesearcher'
 require './yahoosearcher'
 require './bingsearcher'
+require './bingproxiedsearcher'
 
 #Testing-----------------------------------------------------------------------
 
@@ -31,3 +32,6 @@ puts 'BING--------------------------------------------------------------------'
 r3 = BingSearcher.new.search_for query
 show_these_links r3
 
+puts 'PROXIED BING------------------------------------------------------------'
+r4 = BingProxiedSearcher.new.search_for query
+show_these_links r4
