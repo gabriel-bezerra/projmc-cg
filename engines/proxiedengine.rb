@@ -6,6 +6,10 @@ class ProxiedEngine < Engine
         @engine = engine
     end
 
+    def test_results_page
+        raise "Cannot fetch test_results_page from proxy"
+    end
+
     def results_page_for(query)
         agent = Mechanize.new
         web_proxy = agent.get('http://pzdl.info/')
