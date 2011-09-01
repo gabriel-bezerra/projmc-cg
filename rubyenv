@@ -1,4 +1,0 @@
-export PATH=$PATH:$HOME/gems/bin
-export PATH=$PATH:$HOME/gems/gems/bin/
-export RUBYLIB=$HOME/gems/lib:$RUBYLIB
-export GEM_HOME=$HOME/gems/gems
