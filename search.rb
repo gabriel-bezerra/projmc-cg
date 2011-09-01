@@ -4,8 +4,13 @@ require './scraper'
 require './marshalrepository'
 
 queries = ['google bought motorola',
-           'george bush planned 9/11 atacks',
-           'when did titanic sank?']
+           'george bush planned 9/11 attacks',
+           'when did titanic sank?',
+           '"a christmas carol" "charles dickens" books free download',
+           'parfum diva by ungaro 50 ml buy',
+           'Gunther Jakobs law for the enemy',
+           'what is the best chilean wine',
+           'how to make shrimp stuffed potatoes']
 
 scraping_results = Scraper.new(queries).showtime
 
