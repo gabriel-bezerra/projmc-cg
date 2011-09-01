@@ -10,7 +10,11 @@ queries = ['google bought motorola',
            'parfum diva by ungaro 50 ml buy',
            'Gunther Jakobs law for the enemy',
            'what is the best chilean wine',
-           'how to make shrimp stuffed potatoes']
+           'how to make shrimp stuffed potatoes',
+           'johnson bros england history',
+           'manolo blahnik shoes',
+           'internet traffic chart web dead',
+           'documentary health care united states michael moore']
 
 scraping_results = Scraper.new(queries).showtime
 
