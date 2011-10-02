@@ -1,8 +1,8 @@
 
 require "./searcher"
 require "./engines/bingengine"
-require "./engines/bingenglishengine"
-require "./engines/proxiedengine"
+require "./engines/googleengine"
+require "./engines/yahooengine"
 
 #Testing-----------------------------------------------------------------------
 def show_these_links(links)
@@ -13,9 +13,7 @@ def show_these_links(links)
     end
 end
 
-#query = 'inheritance in ruby'
-query = 'abc'
-"""
+query = 'inheritance in ruby'
 
 puts 'GOOGLE------------------------------------------------------------------'
 r1 = Searcher.new(GoogleEngine.new).search_for query
@@ -28,13 +26,4 @@ show_these_links r2
 puts 'BING--------------------------------------------------------------------'
 r3 = Searcher.new(BingEngine.new).search_for query
 show_these_links r3
-
-puts 'PROXIED BING------------------------------------------------------------'
-r4 = Searcher.new(ProxiedEngine.new(BingEngine.new)).search_for query
-show_these_links r4
-
-puts 'ENGLISH BING------------------------------------------------------------'
-r5 = Searcher.new(BingEnglishEngine.new).search_for query
-show_these_links r5
-"""
 

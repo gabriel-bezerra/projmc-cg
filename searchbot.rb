@@ -2,7 +2,6 @@ require './searcher'
 require './engines/googleengine'
 require './engines/yahooengine'
 require './engines/bingengine'
-require './engines/proxiedengine'
 
 class SearchBot
 
@@ -19,7 +18,7 @@ class SearchBot
 
     SEARCHERS = {:google => Searcher.new(GoogleEngine.new),
                  :yahoo => Searcher.new(YahooEngine.new),
-                 :bing => Searcher.new(ProxiedEngine.new(BingEngine.new))}
+                 :bing => Searcher.new(BingEngine.new)}
 
     def initialize queries
         @queries = queries

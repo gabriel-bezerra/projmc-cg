@@ -7,7 +7,7 @@ class BingEngine < Engine
     end
 
     def query_link_for(query)
-        "http://bing.com/search?q=#{query}"
+        "http://www.bing.com/search?q=#{query}&setmkt=en-US"
     end
 
     def html_links_from(results_page)
