@@ -29,9 +29,8 @@ queries = ['google bought motorola',
            'richard dawkins the virus of faith',
            'richard dawkins the blind watchmaker']
 
-scraping_results = SearchBot.new(queries).showtime
+search_results = SearchBot.new(queries).showtime
 
-repository = MarshalRepository.new 'scraped-data'
-repository.save scraping_results
-
+repository = MarshalRepository.new 'collected-data'
+repository.save search_results
 
