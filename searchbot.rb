@@ -4,7 +4,7 @@ require './engines/yahooengine'
 require './engines/bingengine'
 require './engines/proxiedengine'
 
-class Scraper
+class SearchBot
 
     class Result
         attr_reader :title, :url, :rank, :page
