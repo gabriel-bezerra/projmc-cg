@@ -1,0 +1,10 @@
+Some problem ocurred when I tried to fetch http://www.planetebook.com/A-Christmas-Carol.asp => getaddrinfo: Name or service not known
+Some problem ocurred when I tried to fetch http://www.planetebook.com/A-Christmas-Carol.asp => getaddrinfo: Name or service not known
+Some problem ocurred when I tried to fetch http://www.planetebook.com/A-Christmas-Carol.asp => getaddrinfo: Name or service not known
+Some problem ocurred when I tried to fetch http://news.sky.com/home/uk-news/article/15850393 => too many connection resets (due to Timeout::Error - Timeout::Error) after 1 requests on 14081200
+Some problem ocurred when I tried to fetch http://www.gather.com/viewArticle.action?articleId=281474979290459 => too many connection resets (due to Timeout::Error - Timeout::Error) after 1 requests on 15660880
+Some problem ocurred when I tried to fetch http://www.digitaltrends.com/gaming/avengers-movie-game-remains-in-limbo-until-marvel-finds-new-developer/ => 500 => Net::HTTPInternalServerError
+Some problem ocurred when I tried to fetch http://www.digitaltrends.com/gaming/avengers-movie-game-remains-in-limbo-until-marvel-finds-new-developer/ => 500 => Net::HTTPInternalServerError
+Some problem ocurred when I tried to fetch http://thepiratebay.org/torrent/4685924/Richard_Dawkins_-_The_Virus_of_Faith_-_2_of_2 => execution expired
+Some problem ocurred when I tried to fetch http://thepiratebay.org/torrent/4685924/Richard_Dawkins_-_The_Virus_of_Faith_-_2_of_2 => execution expired
+
