@@ -1,3 +1,4 @@
+require "./searchbot"
 
 class MarshalRepository
     def initialize file_name
@@ -19,3 +20,4 @@ class MarshalRepository
     end
 
 end
+
