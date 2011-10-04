@@ -31,7 +31,7 @@ end
 
 results_by_engine = search_results_by_engine_from search_results_by_query
 
-engines = :google, :yahoo, :bing
+engines = :bing, :google, :yahoo
 
 
 # box plot with {Host, Complete} URL length per Rank for {all engines}
@@ -262,7 +262,9 @@ end
     domain_engines <- as.table(domain_engines)
     domain_engines
 
-    png("host_top_level_domain_ratio_per_engine.png", height=700)
+    png("host_top_level_domain_ratio_per_engine.png", height=700, width=520)
+
+    par(xpd=T, mar=par()$mar+c(0,0,0,4))
 
     mosaicplot(
         t(domain_engines),
@@ -271,6 +273,8 @@ end
         xlab = "Engines",
         ylab = "Domains",
     )
+
+    legend(x="right", inset=-0.175, rownames(domain_engines), fill=rainbow(length(domains)));
 
     # Restore default clipping rect
     par(mar=c(5, 4, 4, 2) + 0.1)
