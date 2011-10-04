@@ -243,12 +243,7 @@ end
 
         engines.each do |engine|
             ratio = (engine_set[engine][domain] || 0) * 1.0 / number_of_results_from[engine]
-            domain_ratio_engine_matrix[domain_index] \
-                << if ratio > 0
-                   -Math.log10(ratio)
-                else
-                    0
-                end
+            domain_ratio_engine_matrix[domain_index] <<  ratio
         end
     end
 
@@ -267,19 +262,15 @@ end
     domain_engines <- as.table(domain_engines)
     domain_engines
 
-    png("host_top_level_domain_per_engine.png")
+    png("host_top_level_domain_ratio_per_engine.png", height=700)
 
-    par(xpd=T, mar=par()$mar+c(0,0,0,6))
-
-    barplot(
-        domain_engines,
-        col=rainbow(length(domains)),
-        main = "Host Top-Level Domain per engine",
-        xlab = "Rank",
-        axes = FALSE,
+    mosaicplot(
+        t(domain_engines),
+        color=rainbow(length(domains)),
+        main = "Host Top-Level Domain ratio per engine",
+        xlab = "Engines",
+        ylab = "Domains",
     )
-
-    legend(x="right", inset=-0.25, rownames(domain_engines),  fill=rainbow(length(domains)));
 
     # Restore default clipping rect
     par(mar=c(5, 4, 4, 2) + 0.1)
