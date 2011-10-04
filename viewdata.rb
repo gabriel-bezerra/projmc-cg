@@ -126,6 +126,75 @@ EOF
 end
 
 
+# box plot with {Host, Full} URL length per Rank for {all engines}
+
+engines.each do |engine|
+    rank_domain_array = []
+
+    results_by_engine[engine].each do |result|
+        string = host_part_of(result.url).sub /.*\.(.+)/, '\1'
+        rank_domain_array << [result.rank, string]
+    end
+
+    ranks = []
+    domains = []
+
+    rank_domain_array.each do |rank, domain|
+        ranks |= [rank]
+        domains |= [domain]
+    end
+
+    domain_set = {}
+    rank_domain_array.each do |rank, domain|
+        domain_set[domain] ||= {}
+        domain_set[domain][rank] ||= 0
+
+        domain_set[domain][rank] += 1
+    end
+
+    rank_domain_matrix = []
+
+
+    ranks.each do |rank|
+        rank_domain_matrix[rank] = []
+
+        domains.each do |domain|
+            rank_domain_matrix[rank] << (domain_set[domain][rank] || 0)
+        end
+    end
+
+    require "rinruby"
+
+    R.ranks = ranks
+    R.domains = domains
+    R.rank_domains_c_to_table = rank_domain_matrix.flatten
+
+    R.eval <<EOF
+    rank_domains <- matrix(rank_domains_c_to_table, ncol=length(domains), byrow=TRUE)
+    colnames(rank_domains) <- domains
+    rownames(rank_domains) <- ranks
+    rank_domains <- as.table(rank_domains)
+    rank_domains
+
+    png("host_top_level_domain_per_rank_for_#{engine}.png")
+
+    par(xpd=T, mar=par()$mar+c(0,0,0,4))
+
+    barplot(
+        t(rank_domains),
+        col=rainbow(length(domains)),
+        main = "Host Top-Level Domain per rank for #{engine.to_s.capitalize}",
+        xlab = "Rank",
+        ylab = "Number of results",
+    )
+
+    legend(x=12.5, y=20, colnames(rank_domains),  fill=rainbow(length(domains)));
+
+    # Restore default clipping rect
+    par(mar=c(5, 4, 4, 2) + 0.1)
+EOF
+end
+
 # Bar chart with total amount of results per engine
 
 R.assign "engines", results_by_engine.keys.map { |engine| engine.to_s.capitalize }
