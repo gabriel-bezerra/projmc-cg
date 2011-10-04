@@ -31,12 +31,60 @@ end
 
 results_by_engine = search_results_by_engine_from search_results_by_query
 
+engines = :google, :yahoo, :bing
+
+
+# box plot with {Host, Full} URL length per Rank for {all engines}
+
+require "uri"
+
+def host_part_of url
+    URI.split(url)[2]
+end
+
+engines.each do |engine|
+    url_parts = :host, :full
+    url_parts.each do |url_part|
+
+        rank_lenght_array = []
+
+        results_by_engine[engine].each do |result|
+            string = case url_part
+                     when :host then host_part_of result.url
+                     when :full then result.url
+                     end
+            rank_lenght_array << [result.rank, string.length]
+        end
+
+        ranks = []
+        lengths = []
+
+        rank_lenght_array.each do |rank, length|
+            ranks << rank
+            lengths << length
+        end
+
+        require "rinruby"
+
+        R.ranks = ranks
+        R.lengths = lengths
+
+        R.eval <<EOF
+ png("#{url_part}_url_length_per_rank_for_#{engine}.png")
+ boxplot(
+   lengths ~ ranks,
+   main = "#{url_part.to_s.capitalize} URL length per rank for #{engine.to_s.capitalize}",
+   xlab = "Rank",
+   ylab = "#{url_part.to_s.capitalize} URL length"
+ )
+EOF
+    end
+end
+
 
 # Bar chart with total amount of results per engine
 
-require "rinruby"
-
-R.assign "engines", results_by_engine.keys.map { |engine| engine.to_s }
+R.assign "engines", results_by_engine.keys.map { |engine| engine.to_s.capitalize }
 R.result_counts = results_by_engine.values.map { |results| results.length }
 
 R.eval <<EOF
@@ -46,13 +94,14 @@ R.eval <<EOF
 EOF
 
 
+
 # stdout text with total amount of results per engine
 
-search_results_by_engine_from(search_results_by_query).each do |engine, results|
-    puts "#{engine}: #{results.length}"
-
+#results_by_engine.each do |engine, results|
+#    puts "#{engine}: #{results.length}"
+#
 #    results.each do |r|
 #        puts "\t#{r.rank} - #{r.title} - #{r.url}"
 #    end
-end
+#end
 
