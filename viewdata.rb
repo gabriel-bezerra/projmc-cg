@@ -34,7 +34,7 @@ results_by_engine = search_results_by_engine_from search_results_by_query
 engines = :google, :yahoo, :bing
 
 
-# box plot with {Host, Full} URL length per Rank for {all engines}
+# box plot with {Host, Complete} URL length per Rank for {all engines}
 
 require "uri"
 
@@ -43,7 +43,7 @@ def host_part_of url
 end
 
 engines.each do |engine|
-    url_parts = :host, :full
+    url_parts = :host, :complete
     url_parts.each do |url_part|
 
         rank_lenght_array = []
@@ -51,7 +51,7 @@ engines.each do |engine|
         results_by_engine[engine].each do |result|
             string = case url_part
                      when :host then host_part_of result.url
-                     when :full then result.url
+                     when :complete then result.url
                      end
             rank_lenght_array << [result.rank, string.length]
         end
@@ -82,10 +82,10 @@ EOF
 end
 
 
-# Box plot with {Host, Full} URL length per Engine
+# Box plot with {Host, Complete} URL length per Engine
 
 1.times do
-    url_parts = :host, :full
+    url_parts = :host, :complete
     url_parts.each do |url_part|
 
         engine_lenght_array = []
@@ -94,7 +94,7 @@ end
             results_by_engine[engine].each do |result|
                 string = case url_part
                          when :host then host_part_of result.url
-                         when :full then result.url
+                         when :complete then result.url
                          end
                 engine_lenght_array << [engine.to_s.capitalize, string.length]
             end
