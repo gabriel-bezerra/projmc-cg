@@ -126,9 +126,10 @@ EOF
 end
 
 
-# box plot with {Host, Full} URL length per Rank for {all engines}
+# Bar plot with Top-Level Domains per rank for {all engines}
 
 engines.each do |engine|
+    # collect results
     rank_domain_array = []
 
     results_by_engine[engine].each do |result|
@@ -136,6 +137,7 @@ engines.each do |engine|
         rank_domain_array << [result.rank, string]
     end
 
+    # rank and domain sets
     ranks = []
     domains = []
 
@@ -144,6 +146,7 @@ engines.each do |engine|
         domains |= [domain]
     end
 
+    # mapping domain => rank => number of results
     domain_set = {}
     rank_domain_array.each do |rank, domain|
         domain_set[domain] ||= {}
@@ -152,9 +155,8 @@ engines.each do |engine|
         domain_set[domain][rank] += 1
     end
 
+    # turning map into a matrix
     rank_domain_matrix = []
-
-
     ranks.each do |rank|
         rank_domain_matrix[rank] = []
 
@@ -163,6 +165,7 @@ engines.each do |engine|
         end
     end
 
+    # plot that thing
     require "rinruby"
 
     R.ranks = ranks
@@ -195,6 +198,94 @@ engines.each do |engine|
 EOF
 end
 
+
+# Bar plot with Top-Level Domains per engine
+
+1.times do
+
+    # collect results
+    engine_domain_array = []
+
+    engines.each do |engine|
+        results_by_engine[engine].each do |result|
+            string = host_part_of(result.url).sub /.*\.(.+)/, '\1'
+            engine_domain_array << [engine, string]
+        end
+    end
+
+    # domain set
+    domains = []
+
+    engine_domain_array.each do |engine, domain|
+        domains |= [domain]
+    end
+
+    # mapping engine => domain => number of results
+    engine_set = {}
+    engine_domain_array.each do |engine, domain|
+        engine_set[engine] ||= {}
+        engine_set[engine][domain] ||= 0
+
+        engine_set[engine][domain] += 1
+    end
+
+    # turning map into a matrix
+    number_of_results_from = {}
+    results_by_engine.each do |engine, results|
+        number_of_results_from[engine] = results.length
+    end
+
+    domain_ratio_engine_matrix = []
+    domains.each do |domain|
+        domain_index = domains.index domain
+
+        domain_ratio_engine_matrix[domain_index] = []
+
+        engines.each do |engine|
+            ratio = (engine_set[engine][domain] || 0) * 1.0 / number_of_results_from[engine]
+            domain_ratio_engine_matrix[domain_index] \
+                << if ratio > 0
+                   -Math.log10(ratio)
+                else
+                    0
+                end
+        end
+    end
+
+
+    # plot that thing
+    require "rinruby"
+
+    R.engines = engines.map  { |engine| engine.to_s.capitalize }
+    R.domains = domains
+    R.domain_engines_c_to_table = domain_ratio_engine_matrix.flatten
+
+    R.eval <<EOF
+    domain_engines <- matrix(domain_engines_c_to_table, ncol=length(engines), byrow=TRUE)
+    colnames(domain_engines) <- engines
+    rownames(domain_engines) <- domains
+    domain_engines <- as.table(domain_engines)
+    domain_engines
+
+    png("host_top_level_domain_per_engine.png")
+
+    par(xpd=T, mar=par()$mar+c(0,0,0,6))
+
+    barplot(
+        domain_engines,
+        col=rainbow(length(domains)),
+        main = "Host Top-Level Domain per engine",
+        xlab = "Rank",
+        axes = FALSE,
+    )
+
+    legend(x="right", inset=-0.25, rownames(domain_engines),  fill=rainbow(length(domains)));
+
+    # Restore default clipping rect
+    par(mar=c(5, 4, 4, 2) + 0.1)
+EOF
+end
+
 # Bar chart with total amount of results per engine
 
 R.assign "engines", results_by_engine.keys.map { |engine| engine.to_s.capitalize }
@@ -205,7 +296,6 @@ R.eval <<EOF
     names(result_counts) <- engines
     barplot(result_counts, main="Total number of results per engine")
 EOF
-
 
 
 # stdout text with total amount of results per engine
