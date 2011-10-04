@@ -82,6 +82,50 @@ EOF
 end
 
 
+# Box plot with {Host, Full} URL length per Engine
+
+1.times do
+    url_parts = :host, :full
+    url_parts.each do |url_part|
+
+        engine_lenght_array = []
+
+        engines.each do |engine|
+            results_by_engine[engine].each do |result|
+                string = case url_part
+                         when :host then host_part_of result.url
+                         when :full then result.url
+                         end
+                engine_lenght_array << [engine.to_s.capitalize, string.length]
+            end
+        end
+
+        result_engines = []
+        lengths = []
+
+        engine_lenght_array.each do |engine, length|
+            result_engines << engine
+            lengths << length
+        end
+
+        require "rinruby"
+
+        R.engines = result_engines
+        R.lengths = lengths
+
+        R.eval <<EOF
+            png("#{url_part}_url_length_per_engine.png")
+            boxplot(
+                lengths ~ engines,
+                main = "#{url_part.to_s.capitalize} URL length per engine",
+                xlab = "Engine",
+                ylab = "#{url_part.to_s.capitalize} URL length"
+            )
+EOF
+    end
+end
+
+
 # Bar chart with total amount of results per engine
 
 R.assign "engines", results_by_engine.keys.map { |engine| engine.to_s.capitalize }
