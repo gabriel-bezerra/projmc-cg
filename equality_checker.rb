@@ -89,8 +89,8 @@ end
 
 def equality_ratio_without_ranking_of resultset1, resultset2
     number_of_equal_results = number_of_equal_results_without_ranking_of resultset1, resultset2
-    largest_resultset = largest_result_list_of [resultset1, resultset2]
-    equality_ratio = (1.0 * number_of_equal_results) / largest_resultset.length
+    smallest_resultset = smallest_result_list_of [resultset1, resultset2]
+    equality_ratio = (1.0 * number_of_equal_results) / smallest_resultset.length
     equality_ratio
 end
 
