@@ -17,4 +17,10 @@ search_results_by_query = repository.retrieve
     end
 end
 
+# Bar chart with equal results proportion by query for Google and Bing
+# Bar chart with equal results proportion by query for Google and Yahoo!
+# Bar chart with equal results proportion by query for Bing and Yahoo!
 
+# Bar chart with equal ranked results proportion by query for Google and Bing
+# Bar chart with equal ranked results proportion by query for Google and Yahoo!
+# Bar chart with equal ranked results proportion by query for Bing and Yahoo!
