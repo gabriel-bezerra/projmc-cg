@@ -72,13 +72,51 @@ end
     end
 end
 
+#Equality ratio without ranking (base)------------------------------------------
 
-# Bar chart with equal results proportion by query for Google and Bing
-# Bar chart with equal results proportion by query for Google and Yahoo!
-# Bar chart with equal results proportion by query for Bing and Yahoo!
+def collect_url_from resultset
+    urls = resultset.collect{|result| result.url}
+    urls
+end
 
-# Bar chart with equal ranked results proportion by query for Google and Bing
-# Bar chart with equal ranked results proportion by query for Google and Yahoo!
-# Bar chart with equal ranked results proportion by query for Bing and Yahoo!
+def number_of_equal_results_without_ranking_of resultset1, resultset2
+    urls1 = collect_url_from resultset1
+    urls2 = collect_url_from resultset2
+    equality = urls1 & urls2
+    number_of_equal_results = equality.length
+    number_of_equal_results
+end
+
+def equality_ratio_without_ranking_of resultset1, resultset2
+    number_of_equal_results = number_of_equal_results_without_ranking_of resultset1, resultset2
+    largest_resultset = largest_result_list_of [resultset1, resultset2]
+    equality_ratio = (1.0 * number_of_equal_results) / largest_resultset.length
+    equality_ratio
+end
+
+#Equality ratio without ranking (test)------------------------------------------
+
+1.times do
+    puts 'Comparing without ranking--------------------------------------------'
+
+    compared_engines = [:bing, :yahoo]
+
+    search_results_by_query.each do |query, engines|
+        engine1s_results = engines[compared_engines.first]
+        engine2s_results = engines[compared_engines.last]
+        number_of_equal_results = number_of_equal_results_without_ranking_of engine1s_results, engine2s_results
+        equality_ratio = equality_ratio_without_ranking_of engine1s_results, engine2s_results
+
+        puts 'engine1s_results.length:' + engine1s_results.length.to_s
+        puts 'engine2s_results.length:' + engine2s_results.length.to_s
+        puts 'number_of_equal_results:' + number_of_equal_results.to_s
+        puts query
+        puts equality_ratio
+        puts
+    end
+end
+
+#Equality ratio without ranking (charts)----------------------------------------
+
 
 
