@@ -7,6 +7,10 @@ require "./marshalrepository"
 repository = MarshalRepository.new 'collected-data'
 search_results_by_query = repository.retrieve
 
+def collect_url_from resultset
+    resultset.collect{|result| result.url}
+end
+
 def largest_result_list_of lists_of_results
     largest = lists_of_results.first
 
@@ -52,32 +56,26 @@ end
 
     search_results_by_query.each do |query, engines|
         # Stub
-        engine1s_results = engines[compared_engines.first]
-        engine2s_results = engines[compared_engines.last]
+        engine1s_results = collect_url_from engines[compared_engines.first]
+        engine2s_results = collect_url_from engines[compared_engines.last]
 
         largest_result_list = largest_result_list_of [engine1s_results, engine2s_results]
         smallest_result_list = smallest_result_list_of [engine1s_results, engine2s_results]
 
         number_of_equal_results = 0
         smallest_result_list.each_with_index do |result, index|
-            if result.url == largest_result_list[index].url
+            if result == largest_result_list[index]
                 number_of_equal_results += 1
             end
         end
 
-        equality_ratio = (1.0 * number_of_equal_results) / largest_result_list.length
+        equality_ratio = (1.0 * number_of_equal_results) / smallest_result_list.length
 
-        puts query,equality_ratio
-        puts
+        puts equality_ratio.to_s + ' ' + query
     end
 end
 
 #Equality ratio without ranking (base)------------------------------------------
-
-def collect_url_from resultset
-    urls = resultset.collect{|result| result.url}
-    urls
-end
 
 def number_of_equal_results_without_ranking_of resultset1, resultset2
     urls1 = collect_url_from resultset1
