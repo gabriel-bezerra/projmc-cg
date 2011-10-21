@@ -97,6 +97,53 @@ end
 end
 
 
+#Equality ratio with ranking (charts)---------------------------------------------
+
+1.times do
+    require "rinruby"
+
+    queries = search_results_by_query.keys
+    result_counts = search_results_by_query.values
+
+    R.queries = queries.collect {|query| queries.index(query) + 1}
+    R.result_counts1 = result_counts.collect {|results| equality_ratio_for_same_ranking_between results[:google], results[:bing]}
+    R.result_counts2 = result_counts.collect {|results| equality_ratio_for_same_ranking_between results[:google], results[:yahoo]}
+    R.result_counts3 = result_counts.collect {|results| equality_ratio_for_same_ranking_between results[:yahoo], results[:bing]}
+
+    R.eval <<EOF
+        png("er_with_rank_google_bing.png", width=900)
+        names(result_counts1) <- queries
+        barplot(result_counts1,
+                las=1,
+                col="lightgreen",
+                xlab="Consultas",
+                ylab="Proporção de resultados iguais",
+                main="Proporção de resultados iguais no mesmo rank por consulta entre Google e Bing")
+EOF
+
+    R.eval <<EOF
+        png("er_with_rank_google_yahoo.png", width=900)
+        names(result_counts2) <- queries
+        barplot(result_counts2,
+                las=1,
+                col="lightgreen",
+                xlab="Consultas",
+                ylab="Proporção de resultados iguais",
+                main="Proporção de resultados iguais no mesmo rank por consulta entre Google e Yahoo")
+EOF
+
+    R.eval <<EOF
+        png("er_with_rank_yahoo_bing.png", width=900)
+        names(result_counts3) <- queries
+        barplot(result_counts3,
+                las=1,
+                col="lightgreen",
+                xlab="Consultas",
+                ylab="Proporção de resultados iguais",
+                main="Proporção de resultados iguais no mesmo rank por consulta entre Yahoo e Bing")
+EOF
+end
+
 #Equality ratio without ranking (base)------------------------------------------
 
 def number_of_equal_results_without_ranking_of resultset1, resultset2
@@ -144,47 +191,47 @@ end
 
 #Equality ratio without ranking (charts)----------------------------------------
 
-require "rinruby"
+1.times do
+    require "rinruby"
 
-queries = search_results_by_query.keys
-result_counts = search_results_by_query.values
+    queries = search_results_by_query.keys
+    result_counts = search_results_by_query.values
 
-R.queries = queries.collect {|query| queries.index(query) + 1}
-R.result_counts1 = result_counts.collect {|results| equality_ratio_without_ranking_of results[:google], results[:bing]}
-R.result_counts2 = result_counts.collect {|results| equality_ratio_without_ranking_of results[:google], results[:yahoo]}
-R.result_counts3 = result_counts.collect {|results| equality_ratio_without_ranking_of results[:yahoo], results[:bing]}
+    R.queries = queries.collect {|query| queries.index(query) + 1}
+    R.result_counts1 = result_counts.collect {|results| equality_ratio_without_ranking_of results[:google], results[:bing]}
+    R.result_counts2 = result_counts.collect {|results| equality_ratio_without_ranking_of results[:google], results[:yahoo]}
+    R.result_counts3 = result_counts.collect {|results| equality_ratio_without_ranking_of results[:yahoo], results[:bing]}
 
-R.eval <<EOF
-    png("erwr_google_bing.png", width=900)
-    names(result_counts1) <- queries
-    barplot(result_counts1,
-            las=1,
-            col="lightgreen",
-            xlab="Consultas",
-            ylab="Proporção de resultados iguais",
-            main="Proporção de resultados iguais por consulta entre Google e Bing")
+    R.eval <<EOF
+        png("er_without_rank_google_bing.png", width=900)
+        names(result_counts1) <- queries
+        barplot(result_counts1,
+                las=1,
+                col="lightgreen",
+                xlab="Consultas",
+                ylab="Proporção de resultados iguais",
+                main="Proporção de resultados iguais por consulta entre Google e Bing")
 EOF
 
-R.eval <<EOF
-    png("erwr_google_yahoo.png", width=900)
-    names(result_counts2) <- queries
-    barplot(result_counts2,
-            las=1,
-            col="lightgreen",
-            xlab="Consultas",
-            ylab="Proporção de resultados iguais",
-            main="Proporção de resultados iguais por consulta entre Google e Yahoo")
+    R.eval <<EOF
+        png("er_without_rank_google_yahoo.png", width=900)
+        names(result_counts2) <- queries
+        barplot(result_counts2,
+                las=1,
+                col="lightgreen",
+                xlab="Consultas",
+                ylab="Proporção de resultados iguais",
+                main="Proporção de resultados iguais por consulta entre Google e Yahoo")
 EOF
 
-R.eval <<EOF
-    png("erwr_yahoo_bing.png", width=900)
-    names(result_counts3) <- queries
-    barplot(result_counts3,
-            las=1,
-            col="lightgreen",
-            xlab="Consultas",
-            ylab="Proporção de resultados iguais",
-            main="Proporção de resultados iguais por consulta entre Yahoo e Bing")
+    R.eval <<EOF
+        png("er_without_rank_yahoo_bing.png", width=900)
+        names(result_counts3) <- queries
+        barplot(result_counts3,
+                las=1,
+                col="lightgreen",
+                xlab="Consultas",
+                ylab="Proporção de resultados iguais",
+                main="Proporção de resultados iguais por consulta entre Yahoo e Bing")
 EOF
-
-
+end
