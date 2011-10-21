@@ -59,19 +59,38 @@ end
 
 #Equality ratio with ranking (base)---------------------------------------------
 
-def number_of_equal_results_with_ranking_between first_result_list, second_result_list
-    largest_result_list = largest_result_list_of [first_result_list, second_result_list]
-    smallest_result_list = smallest_result_list_of [first_result_list, second_result_list]
+def number_of_equal_results_with_ranking_between resultset1, resultset2
+    largest_resultset = largest_result_list_of [resultset1, resultset2]
+    smallest_resultset = smallest_result_list_of [resultset1, resultset2]
+
+    #adjusted_resultset != smallest_resultset
+    adjusted_resultset = (smallest_resultset == resultset1) ? resultset2 : resultset1
+    adjusted_resultset = reduced_copy_of adjusted_resultset, smallest_resultset.size
 
     number_of_equal_results = 0
-    smallest_result_list.each_with_index do |result, index|
-        if result == largest_result_list[index]
+    smallest_resultset.each_with_index do |result, index|
+        if result.url == adjusted_resultset[index].url
             number_of_equal_results += 1
         end
     end
 
     number_of_equal_results
 end
+
+
+#def number_of_equal_results_between first_result_list, second_result_list
+#    largest_result_list = largest_result_list_of [first_result_list, second_result_list]
+#    smallest_result_list = smallest_result_list_of [first_result_list, second_result_list]
+#
+#    number_of_equal_results = 0
+#    smallest_result_list.each_with_index do |result, index|
+#        if result == largest_result_list[index]
+#            number_of_equal_results += 1
+#        end
+#    end
+#
+#    number_of_equal_results
+#end
 
 def equality_ratio_for_same_ranking_between first_result_list, second_result_list
     number_of_equal_results = number_of_equal_results_with_ranking_between first_result_list, second_result_list
@@ -83,12 +102,12 @@ end
 
 #Equality ratio with ranking (test)---------------------------------------------
 
-1.times do
+0.times do
     compared_engines = [:bing, :yahoo]
 
     search_results_by_query.each do |query, engines|
-        engine1s_results = collect_url_from engines[compared_engines.first]
-        engine2s_results = collect_url_from engines[compared_engines.last]
+        engine1s_results = compared_engines.first
+        engine2s_results = compared_engines.last
 
         equality_ratio = equality_ratio_for_same_ranking_between engine1s_results, engine2s_results
 
