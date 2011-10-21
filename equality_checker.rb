@@ -59,7 +59,7 @@ end
 
 #Equality ratio with ranking (base)---------------------------------------------
 
-def number_of_equal_results_between first_result_list, second_result_list
+def number_of_equal_results_with_ranking_between first_result_list, second_result_list
     largest_result_list = largest_result_list_of [first_result_list, second_result_list]
     smallest_result_list = smallest_result_list_of [first_result_list, second_result_list]
 
@@ -74,7 +74,7 @@ def number_of_equal_results_between first_result_list, second_result_list
 end
 
 def equality_ratio_for_same_ranking_between first_result_list, second_result_list
-    number_of_equal_results = number_of_equal_results_between first_result_list, second_result_list
+    number_of_equal_results = number_of_equal_results_with_ranking_between first_result_list, second_result_list
 
     smallest_result_list = smallest_result_list_of [first_result_list, second_result_list]
 
