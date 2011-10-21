@@ -258,10 +258,16 @@ end
 
 # Ranking similarity
 
+def order_of_results_in_result_list(result_list, result0, result1)
+    (result_list.index(result0) > result_list.index(result1)) ? :desc
+                                                            : :asc
+end
+
 1.times do
     puts 'Comparing without ranking--------------------------------------------'
 
-    compared_engines = [:bing, :yahoo]
+    #compared_engines = [:bing, :yahoo]
+    compared_engines = [:bing, :google]
 
     search_results_by_query.each do |query, engines|
         first_engine = compared_engines.first
@@ -271,9 +277,52 @@ end
         engine2s_results = collect_url_from engines[second_engine]
 
         common_results = engine1s_results & engine2s_results
-        common_results.combination(2).each do |result0, result1|
-            # TODO here we should compare the pairs between the engines
+
+        number_of_pairs = 0
+
+        number_of_asc_results1 = 0
+        number_of_asc_results2 = 0
+
+        number_of_desc_results1 = 0
+        number_of_desc_results2 = 0
+
+        number_of_equal_orderings = 0
+        number_of_different_orderings = 0
+
+        common_results.combination(2) do |result0, result1|
+            order_in_first_resultsset = order_of_results_in_result_list engine1s_results, result0, result1
+            order_in_second_resultsset = order_of_results_in_result_list engine2s_results, result0, result1
+
+            number_of_pairs += 1
+
+            number_of_asc_results1 += 1 if order_in_first_resultsset == :asc
+            number_of_asc_results2 += 1 if order_in_second_resultsset == :asc
+
+            number_of_desc_results1 += 1 if order_in_first_resultsset == :desc
+            number_of_desc_results2 += 1 if order_in_second_resultsset == :desc
+
+            if order_in_first_resultsset == order_in_second_resultsset
+                number_of_equal_orderings += 1
+            else
+                number_of_different_orderings += 1
+            end
         end
+
+        puts "number_of_pairs = #{number_of_pairs}"
+
+        puts "number_of_asc_results1 = #{number_of_asc_results1}"
+        puts "number_of_asc_results2 = #{number_of_asc_results2}"
+
+        puts "number_of_desc_results1 = #{number_of_desc_results1}"
+        puts "number_of_desc_results2 = #{number_of_desc_results2}"
+
+        puts "number_of_equal_orderings = #{number_of_equal_orderings}"
+        puts "number_of_different_orderings = #{number_of_different_orderings}"
+
+        orderings_equality_ratio = (number_of_pairs != 0) ? Float(number_of_equal_orderings) / number_of_pairs
+                                                          : 0.0
+        puts "orderings_equality_ratio = #{orderings_equality_ratio}"
+        puts
     end
 end
 
