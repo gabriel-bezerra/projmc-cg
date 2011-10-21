@@ -50,6 +50,13 @@ end
     puts smallest_result_list_of([['a'],['a', 'b'],[]]) == []
 end
 
+def reduced_copy_of array, to_size
+    copy = array[0, to_size]
+    copy
+end
+
+
+#Equality ratio with ranking (base)---------------------------------------------
 
 1.times do
     compared_engines = [:bing, :yahoo]
@@ -86,9 +93,15 @@ def number_of_equal_results_without_ranking_of resultset1, resultset2
 end
 
 def equality_ratio_without_ranking_of resultset1, resultset2
-    number_of_equal_results = number_of_equal_results_without_ranking_of resultset1, resultset2
     smallest_resultset = smallest_result_list_of [resultset1, resultset2]
-    equality_ratio = (1.0 * number_of_equal_results) / smallest_resultset.length
+    largest_resultset = largest_result_list_of [resultset1, resultset2]
+
+    adjusted_resultset = (smallest_resultset == resultset1) ? resultset2 : resultset1
+    adjusted_resultset = reduced_copy_of adjusted_resultset, smallest_resultset.size
+
+    number_of_equal_results = number_of_equal_results_without_ranking_of smallest_resultset, adjusted_resultset
+
+    equality_ratio = (1.0 * number_of_equal_results) / smallest_resultset.size
     equality_ratio
 end
 
