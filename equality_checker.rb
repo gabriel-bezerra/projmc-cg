@@ -254,3 +254,26 @@ EOF
                 main="Proporção de resultados iguais por consulta entre Yahoo e Bing")
 EOF
 end
+
+
+# Ranking similarity
+
+1.times do
+    puts 'Comparing without ranking--------------------------------------------'
+
+    compared_engines = [:bing, :yahoo]
+
+    search_results_by_query.each do |query, engines|
+        first_engine = compared_engines.first
+        second_engine = compared_engines.last
+
+        engine1s_results = collect_url_from engines[first_engine]
+        engine2s_results = collect_url_from engines[second_engine]
+
+        common_results = engine1s_results & engine2s_results
+        common_results.combination(2).each do |result0, result1|
+            # TODO here we should compare the pairs between the engines
+        end
+    end
+end
+
