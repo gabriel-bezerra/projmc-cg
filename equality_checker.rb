@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# encoding: utf-8
 
 require "./marshalrepository"
 
@@ -58,29 +59,43 @@ end
 
 #Equality ratio with ranking (base)---------------------------------------------
 
+def number_of_equal_results_between first_result_list, second_result_list
+    largest_result_list = largest_result_list_of [first_result_list, second_result_list]
+    smallest_result_list = smallest_result_list_of [first_result_list, second_result_list]
+
+    number_of_equal_results = 0
+    smallest_result_list.each_with_index do |result, index|
+        if result == largest_result_list[index]
+            number_of_equal_results += 1
+        end
+    end
+
+    number_of_equal_results
+end
+
+def equality_ratio_for_same_ranking_between first_result_list, second_result_list
+    number_of_equal_results = number_of_equal_results_between first_result_list, second_result_list
+
+    smallest_result_list = smallest_result_list_of [first_result_list, second_result_list]
+
+    (1.0 * number_of_equal_results) / smallest_result_list.length
+end
+
+#Equality ratio with ranking (test)---------------------------------------------
+
 1.times do
     compared_engines = [:bing, :yahoo]
 
     search_results_by_query.each do |query, engines|
-        # Stub
         engine1s_results = collect_url_from engines[compared_engines.first]
         engine2s_results = collect_url_from engines[compared_engines.last]
 
-        largest_result_list = largest_result_list_of [engine1s_results, engine2s_results]
-        smallest_result_list = smallest_result_list_of [engine1s_results, engine2s_results]
-
-        number_of_equal_results = 0
-        smallest_result_list.each_with_index do |result, index|
-            if result == largest_result_list[index]
-                number_of_equal_results += 1
-            end
-        end
-
-        equality_ratio = (1.0 * number_of_equal_results) / smallest_result_list.length
+        equality_ratio = equality_ratio_for_same_ranking_between engine1s_results, engine2s_results
 
         puts equality_ratio.to_s + ' ' + query
     end
 end
+
 
 #Equality ratio without ranking (base)------------------------------------------
 
