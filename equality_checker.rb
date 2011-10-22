@@ -318,8 +318,8 @@ end
                 las=1,
                 col="lightgreen",
                 xlab="Consultas",
-                ylab="Proporção de resultados iguais com mesma ordenação",
-                main="Proporção de resultados iguais com mesma ordenação por consulta entre Google e Bing")
+                ylab="Probabilidade de se obter resultados iguais com mesma ordenação",
+                main="Probabilidade de se obter resultados iguais com mesma ordenação por consulta entre Google e Bing")
 EOF
 
     R.eval <<EOF
@@ -329,8 +329,8 @@ EOF
                 las=1,
                 col="lightgreen",
                 xlab="Consultas",
-                ylab="Proporção de resultados iguais com mesma ordenação",
-                main="Proporção de resultados iguais com mesma ordenação por consulta entre Google e Yahoo")
+                ylab="Probabilidade de se obter resultados iguais com mesma ordenação",
+                main="Probabilidade de se obter resultados iguais com mesma ordenação por consulta entre Google e Yahoo")
 EOF
 
     R.eval <<EOF
@@ -340,7 +340,8 @@ EOF
                 las=1,
                 col="lightgreen",
                 xlab="Consultas",
-                ylab="Proporção de resultados iguais com mesma ordenação",
-                main="Proporção de resultados iguais com mesma ordenação por consulta entre Yahoo e Bing")
+                ylab="Probabilidade de se obter resultados iguais com mesma ordenação",
+                main="Probabilidade de se obter resultados iguais com mesma ordenação por consulta entre Yahoo e Bing")
 EOF
 end
+
