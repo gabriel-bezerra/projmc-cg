@@ -258,71 +258,58 @@ end
 
 # Ranking similarity
 
-def order_of_results_in_result_list(result_list, result0, result1)
+def order_of_results_in_result_list result_list, result0, result1
     (result_list.index(result0) > result_list.index(result1)) ? :desc
-                                                            : :asc
+                                                              : :asc
+end
+
+def ordering_equality_ratio_between result_list0, result_list1
+    common_results = result_list0 & result_list1
+
+    number_of_pairs = 0
+    number_of_equal_orderings = 0
+
+    common_results.combination(2) do |result0, result1|
+        order_in_first_resultsset = order_of_results_in_result_list result_list0, result0, result1
+        order_in_second_resultsset = order_of_results_in_result_list result_list1, result0, result1
+
+        number_of_pairs += 1
+
+        number_of_equal_orderings += 1 if order_in_first_resultsset == order_in_second_resultsset
+    end
+
+    (number_of_pairs != 0) ? Float(number_of_equal_orderings) / number_of_pairs : 0.0
+end
+
+def equality_ratio_considering_ranking_ordering_between full_result_list0, full_result_list1
+    smallest_full_result_list = smallest_result_list_of [full_result_list0, full_result_list1]
+    largest_full_result_list = largest_result_list_of [full_result_list0, full_result_list1]
+
+    adjusted_full_result_list = (smallest_full_result_list == full_result_list0) ? full_result_list1
+                                                                                 : full_result_list0
+    adjusted_full_result_list = reduced_copy_of adjusted_full_result_list, smallest_full_result_list.size
+
+    result_list0 = collect_url_from smallest_full_result_list
+    result_list1 = collect_url_from adjusted_full_result_list
+
+    orderings_equality_ratio = ordering_equality_ratio_between result_list0, result_list1
+
+    engines_equality_ratio = equality_ratio_without_ranking_of full_result_list0, full_result_list1
+
+    orderings_equality_ratio * engines_equality_ratio
 end
 
 1.times do
-    puts 'Comparing without ranking--------------------------------------------'
+    puts 'Comparing considering ranking ordering --------------------------------------------'
 
-    #compared_engines = [:bing, :yahoo]
-    compared_engines = [:bing, :google]
+    compared_engines = [:bing, :yahoo]
 
     search_results_by_query.each do |query, engines|
         first_engine = compared_engines.first
         second_engine = compared_engines.last
 
-        engine1s_results = collect_url_from engines[first_engine]
-        engine2s_results = collect_url_from engines[second_engine]
-
-        common_results = engine1s_results & engine2s_results
-
-        number_of_pairs = 0
-
-        number_of_asc_results1 = 0
-        number_of_asc_results2 = 0
-
-        number_of_desc_results1 = 0
-        number_of_desc_results2 = 0
-
-        number_of_equal_orderings = 0
-        number_of_different_orderings = 0
-
-        common_results.combination(2) do |result0, result1|
-            order_in_first_resultsset = order_of_results_in_result_list engine1s_results, result0, result1
-            order_in_second_resultsset = order_of_results_in_result_list engine2s_results, result0, result1
-
-            number_of_pairs += 1
-
-            number_of_asc_results1 += 1 if order_in_first_resultsset == :asc
-            number_of_asc_results2 += 1 if order_in_second_resultsset == :asc
-
-            number_of_desc_results1 += 1 if order_in_first_resultsset == :desc
-            number_of_desc_results2 += 1 if order_in_second_resultsset == :desc
-
-            if order_in_first_resultsset == order_in_second_resultsset
-                number_of_equal_orderings += 1
-            else
-                number_of_different_orderings += 1
-            end
-        end
-
-        puts "number_of_pairs = #{number_of_pairs}"
-
-        puts "number_of_asc_results1 = #{number_of_asc_results1}"
-        puts "number_of_asc_results2 = #{number_of_asc_results2}"
-
-        puts "number_of_desc_results1 = #{number_of_desc_results1}"
-        puts "number_of_desc_results2 = #{number_of_desc_results2}"
-
-        puts "number_of_equal_orderings = #{number_of_equal_orderings}"
-        puts "number_of_different_orderings = #{number_of_different_orderings}"
-
-        orderings_equality_ratio = (number_of_pairs != 0) ? Float(number_of_equal_orderings) / number_of_pairs
-                                                          : 0.0
-        puts "orderings_equality_ratio = #{orderings_equality_ratio}"
-        puts
+        query_equality_ratio = equality_ratio_considering_ranking_ordering_between engines[first_engine], engines[second_engine]
+        puts "query_equality_ratio = #{query_equality_ratio}"
     end
 end
 
