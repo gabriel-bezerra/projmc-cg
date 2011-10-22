@@ -77,21 +77,6 @@ def number_of_equal_results_with_ranking_between resultset1, resultset2
     number_of_equal_results
 end
 
-
-#def number_of_equal_results_between first_result_list, second_result_list
-#    largest_result_list = largest_result_list_of [first_result_list, second_result_list]
-#    smallest_result_list = smallest_result_list_of [first_result_list, second_result_list]
-#
-#    number_of_equal_results = 0
-#    smallest_result_list.each_with_index do |result, index|
-#        if result == largest_result_list[index]
-#            number_of_equal_results += 1
-#        end
-#    end
-#
-#    number_of_equal_results
-#end
-
 def equality_ratio_for_same_ranking_between first_result_list, second_result_list
     number_of_equal_results = number_of_equal_results_with_ranking_between first_result_list, second_result_list
 
@@ -281,7 +266,7 @@ def ordering_equality_ratio_between result_list0, result_list1
     (number_of_pairs != 0) ? Float(number_of_equal_orderings) / number_of_pairs : 0.0
 end
 
-def equality_ratio_considering_ranking_ordering_between full_result_list0, full_result_list1
+def equality_ratio_considering_results_ordering_between full_result_list0, full_result_list1
     smallest_full_result_list = smallest_result_list_of [full_result_list0, full_result_list1]
     largest_full_result_list = largest_result_list_of [full_result_list0, full_result_list1]
 
@@ -299,8 +284,8 @@ def equality_ratio_considering_ranking_ordering_between full_result_list0, full_
     orderings_equality_ratio * engines_equality_ratio
 end
 
-1.times do
-    puts 'Comparing considering ranking ordering --------------------------------------------'
+0.times do
+    puts 'Comparing considering results ordering --------------------------------------------'
 
     compared_engines = [:bing, :yahoo]
 
@@ -308,8 +293,54 @@ end
         first_engine = compared_engines.first
         second_engine = compared_engines.last
 
-        query_equality_ratio = equality_ratio_considering_ranking_ordering_between engines[first_engine], engines[second_engine]
+        query_equality_ratio = equality_ratio_considering_results_ordering_between engines[first_engine], engines[second_engine]
         puts "query_equality_ratio = #{query_equality_ratio}"
     end
 end
 
+#Equality ratio considering results ordering (charts)----------------------------------------
+
+1.times do
+    require "rinruby"
+
+    queries = search_results_by_query.keys
+    result_counts = search_results_by_query.values
+
+    R.queries = queries.collect {|query| queries.index(query) + 1}
+    R.result_counts1 = result_counts.collect {|results| equality_ratio_considering_results_ordering_between results[:google], results[:bing]}
+    R.result_counts2 = result_counts.collect {|results| equality_ratio_considering_results_ordering_between results[:google], results[:yahoo]}
+    R.result_counts3 = result_counts.collect {|results| equality_ratio_considering_results_ordering_between results[:yahoo], results[:bing]}
+
+    R.eval <<EOF
+        png("er_rank_order_google_bing.png", width=900)
+        names(result_counts1) <- queries
+        barplot(result_counts1,
+                las=1,
+                col="lightgreen",
+                xlab="Consultas",
+                ylab="Proporção de resultados iguais com mesma ordenação",
+                main="Proporção de resultados iguais com mesma ordenação por consulta entre Google e Bing")
+EOF
+
+    R.eval <<EOF
+        png("er_rank_order_google_yahoo.png", width=900)
+        names(result_counts2) <- queries
+        barplot(result_counts2,
+                las=1,
+                col="lightgreen",
+                xlab="Consultas",
+                ylab="Proporção de resultados iguais com mesma ordenação",
+                main="Proporção de resultados iguais com mesma ordenação por consulta entre Google e Yahoo")
+EOF
+
+    R.eval <<EOF
+        png("er_rank_order_yahoo_bing.png", width=900)
+        names(result_counts3) <- queries
+        barplot(result_counts3,
+                las=1,
+                col="lightgreen",
+                xlab="Consultas",
+                ylab="Proporção de resultados iguais com mesma ordenação",
+                main="Proporção de resultados iguais com mesma ordenação por consulta entre Yahoo e Bing")
+EOF
+end
