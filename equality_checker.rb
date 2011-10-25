@@ -248,22 +248,54 @@ def order_of_results_in_result_list result_list, result0, result1
                                                               : :asc
 end
 
-def ordering_equality_ratio_between result_list0, result_list1
+def number_of_distinct_pairs_of_elements_of list
+    # combination(length, 2)
+    list.length * (list.length - 1) / 2
+end
+
+def equality_ratio_considering_results_ordering_between_results result_list0, result_list1
+    # Calculating ratio of ordering equality between the common results
     common_results = result_list0 & result_list1
 
-    number_of_pairs = 0
+    number_of_common_pairs = 0
     number_of_equal_orderings = 0
 
     common_results.combination(2) do |result0, result1|
         order_in_first_resultsset = order_of_results_in_result_list result_list0, result0, result1
         order_in_second_resultsset = order_of_results_in_result_list result_list1, result0, result1
 
-        number_of_pairs += 1
+        number_of_common_pairs += 1
 
         number_of_equal_orderings += 1 if order_in_first_resultsset == order_in_second_resultsset
     end
 
-    (number_of_pairs != 0) ? Float(number_of_equal_orderings) / number_of_pairs : 0.0
+    orderings_equality_ratio = (number_of_common_pairs != 0) ? Float(number_of_equal_orderings) / number_of_common_pairs : 0.0
+    #end
+
+    number_of_pairs0 = number_of_distinct_pairs_of_elements_of result_list0
+    number_of_pairs1 = number_of_distinct_pairs_of_elements_of result_list1
+    number_of_pairs_of_the_union_of_0_and_1 = (number_of_pairs0 + number_of_pairs1 - number_of_common_pairs)
+
+    engines_equality_ratio = Float(number_of_common_pairs) / number_of_pairs_of_the_union_of_0_and_1
+
+    orderings_equality_ratio * engines_equality_ratio
+end
+
+#Testing
+0.times do
+    puts 'Test comparing considering results ordering --------------------------------------------'
+
+    first_list = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
+    second_list = ['j', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
+
+    #first_list = ['a', 'b', 'c']
+    #second_list = ['c', 'b', 'a']
+
+    #first_list = ['a', 'b', 'c', 'd']
+    #second_list = ['c', 'a', 'b', 'd']
+
+    query_equality_ratio = equality_ratio_considering_results_ordering_between_results first_list, second_list
+    puts "#{first_list}-#{second_list} equality ratio = #{query_equality_ratio}"
 end
 
 def equality_ratio_considering_results_ordering_between full_result_list0, full_result_list1
@@ -277,11 +309,7 @@ def equality_ratio_considering_results_ordering_between full_result_list0, full_
     result_list0 = collect_url_from smallest_full_result_list
     result_list1 = collect_url_from adjusted_full_result_list
 
-    orderings_equality_ratio = ordering_equality_ratio_between result_list0, result_list1
-
-    engines_equality_ratio = equality_ratio_without_ranking_of full_result_list0, full_result_list1
-
-    orderings_equality_ratio * engines_equality_ratio
+    equality_ratio_considering_results_ordering_between_results result_list0, result_list1
 end
 
 0.times do
