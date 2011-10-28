@@ -465,3 +465,43 @@ EOF
                 main="#{main_label} entre Yahoo e Bing")
 EOF
 end
+
+
+# Hypothesis test
+
+def global_equality_ratio_for_same_ranking_between engine0, engine1, results_by_query
+
+    number_of_results = 0
+    number_of_equal_results = 0
+
+    results_by_query.values.each do |engines|
+        # select
+        resultset1 = engines[engine0]
+        resultset2 = engines[engine1]
+
+        # treat
+        smallest_resultset = smallest_result_list_of [resultset1, resultset2]
+        largest_resultset = largest_result_list_of [resultset1, resultset2]
+
+        adjusted_resultset = (smallest_resultset == resultset1) ? resultset2 : resultset1
+        adjusted_resultset = reduced_copy_of adjusted_resultset, smallest_resultset.size
+
+        # count
+        number_of_results += smallest_resultset.length
+
+        number_of_equal_results += number_of_equal_results_without_ranking_of smallest_resultset, adjusted_resultset
+
+        # show
+        #puts "acc: equal=#{number_of_equal_results} all=#{number_of_results}"
+    end
+
+    Float(number_of_equal_results) / number_of_results
+end
+
+1.times do
+    equality_ratio = global_equality_ratio_for_same_ranking_between :bing, :yahoo, search_results_by_query
+
+    puts "global ratio of common results = #{equality_ratio}"
+end
+
+
