@@ -248,29 +248,41 @@ def order_of_results_in_result_list result_list, result0, result1
                                                               : :asc
 end
 
-def number_of_distinct_pairs_of_elements_of list
-    # combination(length, 2)
-    list.length * (list.length - 1) / 2
-end
-
-def equality_ratio_considering_results_ordering_between_results result_list0, result_list1
-    # Calculating ratio of ordering equality between the common results
+def number_of_equal_orderings_between_common_pairs_of result_list0, result_list1
     common_results = result_list0 & result_list1
-
-    number_of_common_pairs = 0
     number_of_equal_orderings = 0
 
     common_results.combination(2) do |result0, result1|
         order_in_first_resultsset = order_of_results_in_result_list result_list0, result0, result1
         order_in_second_resultsset = order_of_results_in_result_list result_list1, result0, result1
 
-        number_of_common_pairs += 1
-
         number_of_equal_orderings += 1 if order_in_first_resultsset == order_in_second_resultsset
     end
 
-    orderings_equality_ratio = (number_of_common_pairs != 0) ? Float(number_of_equal_orderings) / number_of_common_pairs : 0.0
-    #end
+    number_of_equal_orderings
+end
+
+def number_of_distinct_pairs_of_elements_of list
+    # combination(length, 2)
+    list.length * (list.length - 1) / 2
+end
+
+def ordering_equality_ratio_between result_list0, result_list1
+    common_results = result_list0 & result_list1
+
+    number_of_common_pairs = number_of_distinct_pairs_of_elements_of common_results
+    number_of_equal_orderings = number_of_equal_orderings_between_common_pairs_of result_list0, result_list1
+
+    #(number_of_common_pairs != 0) ? Float(number_of_equal_orderings) / number_of_common_pairs : 0.0
+    Float(number_of_equal_orderings) / number_of_common_pairs
+end
+
+def equality_ratio_considering_results_ordering_between_results result_list0, result_list1
+    common_results = result_list0 & result_list1
+
+    number_of_common_pairs = number_of_distinct_pairs_of_elements_of common_results
+
+    ordering_equality_ratio = ordering_equality_ratio_between result_list0, result_list1
 
     number_of_pairs0 = number_of_distinct_pairs_of_elements_of result_list0
     number_of_pairs1 = number_of_distinct_pairs_of_elements_of result_list1
@@ -278,7 +290,7 @@ def equality_ratio_considering_results_ordering_between_results result_list0, re
 
     engines_equality_ratio = Float(number_of_common_pairs) / number_of_pairs_of_the_union_of_0_and_1
 
-    orderings_equality_ratio * engines_equality_ratio
+    ordering_equality_ratio * engines_equality_ratio
 end
 
 #Testing
@@ -373,3 +385,83 @@ EOF
 EOF
 end
 
+# Ordering equality ratio
+
+def ordering_equality_ratio_for_full_results_between full_result_list0, full_result_list1
+    smallest_full_result_list = smallest_result_list_of [full_result_list0, full_result_list1]
+    largest_full_result_list = largest_result_list_of [full_result_list0, full_result_list1]
+
+    adjusted_full_result_list = (smallest_full_result_list == full_result_list0) ? full_result_list1
+                                                                                 : full_result_list0
+    adjusted_full_result_list = reduced_copy_of adjusted_full_result_list, smallest_full_result_list.size
+
+    result_list0 = collect_url_from smallest_full_result_list
+    result_list1 = collect_url_from adjusted_full_result_list
+
+    ordering_equality_ratio_between result_list0, result_list1
+end
+
+0.times do
+    puts ' ordering equality ratio --------------------------------------------'
+
+    compared_engines = [:bing, :yahoo]
+
+    search_results_by_query.each do |query, engines|
+        first_engine = compared_engines.first
+        second_engine = compared_engines.last
+
+        ordering_equality_ratio = ordering_equality_ratio_for_full_results_between engines[first_engine], engines[second_engine]
+        puts "ordering_equality_ratio = #{ordering_equality_ratio}"
+    end
+end
+
+# Ordering equality ratio (charts)----------------------------------------
+
+1.times do
+    require "rinruby"
+
+    queries = search_results_by_query.keys
+    result_counts = search_results_by_query.values
+
+    file_prefix = "er_ordering"
+    y_label = "Proporção dos resultados em comum com a mesma ordenação"
+    main_label = "#{y_label} por consulta"
+
+    R.queries = queries.collect {|query| queries.index(query) + 1}
+    R.result_counts1 = result_counts.collect {|results| ordering_equality_ratio_for_full_results_between results[:google], results[:bing]}
+    R.result_counts2 = result_counts.collect {|results| ordering_equality_ratio_for_full_results_between results[:google], results[:yahoo]}
+    R.result_counts3 = result_counts.collect {|results| ordering_equality_ratio_for_full_results_between results[:yahoo], results[:bing]}
+
+    R.eval <<EOF
+        png("#{file_prefix}_google_bing.png", width=900)
+        names(result_counts1) <- queries
+        barplot(result_counts1,
+                las=1,
+                col="lightgreen",
+                xlab="Consultas",
+                ylab="#{y_label}",
+                main="#{main_label} entre Google e Bing")
+EOF
+
+    R.eval <<EOF
+        png("#{file_prefix}_google_yahoo.png", width=900)
+        names(result_counts2) <- queries
+        barplot(result_counts2,
+                las=1,
+                col="lightgreen",
+                xlab="Consultas",
+                ylab="#{y_label}",
+                main="#{main_label} entre Google e Yahoo")
+EOF
+
+    R.eval <<EOF
+        png("#{file_prefix}_yahoo_bing.png", width=900)
+        names(result_counts3) <- queries
+        barplot(result_counts3,
+                las=1,
+                col="lightgreen",
+                xlab="Consultas",
+                ylab="#{y_label}",
+                main="#{main_label} entre Yahoo e Bing")
+EOF
+end
