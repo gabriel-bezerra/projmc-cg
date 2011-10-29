@@ -273,7 +273,6 @@ def ordering_equality_ratio_between result_list0, result_list1
     number_of_common_pairs = number_of_distinct_pairs_of_elements_of common_results
     number_of_equal_orderings = number_of_equal_orderings_between_common_pairs_of result_list0, result_list1
 
-    #(number_of_common_pairs != 0) ? Float(number_of_equal_orderings) / number_of_common_pairs : 0.0
     Float(number_of_equal_orderings) / number_of_common_pairs
 end
 
@@ -469,6 +468,8 @@ end
 
 # Hypothesis test
 
+# equal sets of results
+
 def equality_vector_for engine0, engine1, search_results
     coincidence_vector = []
 
@@ -499,6 +500,56 @@ end
         t.test(equality_vector1, mu=0.95, alternative="less")
         t.test(equality_vector2, mu=0.95, alternative="less")
         t.test(equality_vector3, mu=0.95, alternative="less")
+EOF
+end
+
+
+# equal ordering of common results
+
+def ordering_vector_for engine0, engine1, search_results
+    coincidence_vector = []
+
+    search_results.values.map do |engines|
+        resultset1 = collect_url_from engines[engine0]
+        resultset2 = collect_url_from engines[engine1]
+
+        smallest_resultset = smallest_result_list_of [resultset1, resultset2]
+        largest_resultset = largest_result_list_of [resultset1, resultset2]
+
+        adjusted_resultset = (smallest_resultset == resultset1) ? resultset2 : resultset1
+        adjusted_resultset = reduced_copy_of adjusted_resultset, smallest_resultset.size
+
+        result_list0 = smallest_resultset
+        result_list1 = adjusted_resultset
+
+        common_results = result_list0 & result_list1
+        number_of_common_pairs = number_of_distinct_pairs_of_elements_of common_results
+
+        if (number_of_common_pairs > 0)
+            number_of_equal_orderings = number_of_equal_orderings_between_common_pairs_of result_list0, result_list1
+
+            number_of_equal_orderings.times do
+                coincidence_vector << 1
+            end
+
+            (number_of_common_pairs - number_of_equal_orderings).times do
+                coincidence_vector << 0
+            end
+        end
+    end
+
+    coincidence_vector
+end
+
+1.times do
+    R.ordering_vector1 = ordering_vector_for(:google, :bing, search_results_by_query)
+    R.ordering_vector2 = ordering_vector_for(:google, :yahoo, search_results_by_query)
+    R.ordering_vector3 = ordering_vector_for(:yahoo, :bing, search_results_by_query)
+
+    R.eval <<EOF
+        t.test(ordering_vector1, mu=0.95, alternative="less")
+        t.test(ordering_vector2, mu=0.95, alternative="less")
+        t.test(ordering_vector3, mu=0.95, alternative="less")
 EOF
 end
 
