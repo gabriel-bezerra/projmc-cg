@@ -496,11 +496,36 @@ end
     R.equality_vector2 = equality_vector_for(:google, :yahoo, search_results_by_query)
     R.equality_vector3 = equality_vector_for(:yahoo, :bing, search_results_by_query)
 
-    R.eval <<EOF
-        t.test(equality_vector1, mu=0.95, alternative="less")
-        t.test(equality_vector2, mu=0.95, alternative="less")
-        t.test(equality_vector3, mu=0.95, alternative="less")
-EOF
+    # mu = 1.0
+    puts "Equality test - mu = 1.0"
+
+    puts
+    puts "Google, Bing"
+    R.eval 't.test(equality_vector1, mu=1.0, alternative="less")'
+
+    puts
+    puts "Google, Yahoo"
+    R.eval 't.test(equality_vector2, mu=1.0, alternative="less")'
+
+    puts
+    puts "Yahoo, Bing"
+    R.eval 't.test(equality_vector3, mu=1.0, alternative="less")'
+
+    puts
+    # mu = 0.95
+    puts "Equality test - mu = 0.95"
+
+    puts
+    puts "Google, Bing"
+    R.eval 't.test(equality_vector1, mu=0.95, alternative="less")'
+
+    puts
+    puts "Google, Yahoo"
+    R.eval 't.test(equality_vector2, mu=0.95, alternative="less")'
+
+    puts
+    puts "Yahoo, Bing"
+    R.eval 't.test(equality_vector3, mu=0.95, alternative="less")'
 end
 
 
@@ -546,10 +571,36 @@ end
     R.ordering_vector2 = ordering_vector_for(:google, :yahoo, search_results_by_query)
     R.ordering_vector3 = ordering_vector_for(:yahoo, :bing, search_results_by_query)
 
-    R.eval <<EOF
-        t.test(ordering_vector1, mu=0.95, alternative="less")
-        t.test(ordering_vector2, mu=0.95, alternative="less")
-        t.test(ordering_vector3, mu=0.95, alternative="less")
-EOF
+    # mu = 1.0
+    puts "Equality test - mu = 1.0"
+
+    puts
+    puts "Google, Bing"
+    R.eval 't.test(ordering_vector1, mu=1.0, alternative="less")'
+
+    puts
+    puts "Google, Yahoo"
+    R.eval 't.test(ordering_vector2, mu=1.0, alternative="less")'
+
+    puts
+    puts "Yahoo, Bing"
+    R.eval 't.test(ordering_vector3, mu=1.0, alternative="less")'
+
+
+    puts
+    # mu = 0.95
+    puts "Equality test - mu = 0.95"
+
+    puts
+    puts "Google, Bing"
+    R.eval 't.test(ordering_vector1, mu=0.95, alternative="less")'
+
+    puts
+    puts "Google, Yahoo"
+    R.eval 't.test(ordering_vector2, mu=0.95, alternative="less")'
+
+    puts
+    puts "Yahoo, Bing"
+    R.eval 't.test(ordering_vector3, mu=0.95, alternative="less")'
 end
 
