@@ -238,6 +238,16 @@ EOF
                 ylab="Proporção de resultados iguais",
                 main="Proporção de resultados iguais por consulta entre Yahoo e Bing")
 EOF
+
+    # BoxPlot
+    R.eval <<EOF
+        png("er_without_rank_boxplot.png")
+        boxplot(result_counts1, result_counts2, result_counts3,
+                names=c("Google-Bing", "Google-Yahoo", "Yahoo-Bing"),
+                xlab="Comparações",
+                ylab="Proporção de resultados iguais",
+                main="Proporção de resultados iguais por consulta")
+EOF
 end
 
 
