@@ -433,7 +433,7 @@ end
     result_counts = search_results_by_query.values
 
     file_prefix = "er_ordering"
-    y_label = "Proporção dos resultados em comum com a mesma ordenação"
+    y_label = "Proporção de preservação da ordenação entre resultados em comum"
     main_label = "#{y_label} por consulta"
 
     R.queries = queries.collect {|query| queries.index(query) + 1}
@@ -472,6 +472,17 @@ EOF
                 xlab="Consultas",
                 ylab="#{y_label}",
                 main="#{main_label} entre Yahoo e Bing")
+EOF
+
+    # BoxPlot
+    R.eval <<EOF
+        png("#{file_prefix}_boxplot.png", width=650)
+        boxplot(result_counts1, result_counts2, result_counts3,
+                names=c("Google-Bing", "Google-Yahoo", "Yahoo-Bing"),
+                xlab="Comparações",
+                ylab="#{y_label}",
+                main="#{main_label}",
+                varwidth=TRUE)
 EOF
 end
 
